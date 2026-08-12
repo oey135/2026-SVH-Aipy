@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스터디 플래너</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 섹션 -->
+        <header class="header">
+            <div class="header-layout">
+                <!-- 왼쪽: 날짜 및 D-Day -->
+                <div class="header-left">
+                    <div class="date-info">
+                        <h1 id="todayDate" class="today-date">2026년 8월 12일</h1>
+                        <p id="dayOfWeek" class="day-of-week">화요일</p>
+                    </div>
+                    
+                    <!-- D-Day 섹션 -->
+                    <div class="dday-compact">
+                        <div class="dday-header-compact">
+                            <h3>D-Day</h3>
+                            <button id="addDdayBtn" class="btn-add-compact">+</button>
+                        </div>
+                        <div id="ddayList" class="dday-list-compact">
+                            <!-- D-Day 항목들이 여기에 추가됨 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 오른쪽: 동기 및 공부량 -->
+                <div class="header-right">
+                    <div class="motivation-section">
+                        <label for="motivationInput" class="motivation-label">오늘의 다짐</label>
+                        <input type="text" id="motivationInput" class="motivation-input" placeholder="여기에 입력해주세요...">
+                    </div>
+                    
+                    <div class="study-summary-compact">
+                        <span class="summary-label">오늘 공부량</span>
+                        <span id="totalStudyTime" class="summary-value">0분</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 왼쪽: 오늘의 계획 -->
+            <section class="plan-section">
+                <h2 class="section-title">오늘의 계획</h2>
+                
+                <div class="subjects-container" id="subjectsContainer">
+                    <!-- 과목들이 여기에 추가됨 -->
+                </div>
+                
+                <button id="addSubjectBtn" class="btn-add-subject">+ 과목 추가</button>
+            </section>
+
+            <!-- 오른쪽: 시간대별 공부기록 -->
+            <section class="record-section">
+                <h2 class="section-title">시간대별 공부 기록</h2>
+                
+                <div class="time-table-wrapper">
+                    <div id="timeTableGrid" class="time-table-grid">
+                        <!-- 시간표가 여기에 생성됨 -->
+                    </div>
+                </div>
+                
+                <div class="record-info">
+                    <small>💡 드래그로 구간을 표시하거나, 칸을 클릭하여 과목을 변경할 수 있습니다</small>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 모달: D-Day 추가/수정 -->
+    <div id="ddayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="ddayModalTitle">D-Day 추가</h2>
+            <form id="ddayForm">
+                <input type="hidden" id="ddayId">
+                <div class="form-group">
+                    <label for="ddayName">이름</label>
+                    <input type="text" id="ddayName" placeholder="예: 수능" required>
+                </div>
+                <div class="form-group">
+                    <label for="ddayDate">날짜</label>
+                    <input type="date" id="ddayDate" required>
+                </div>
+                <button type="submit" class="btn-submit">저장</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 모달: 과목 추가 -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>과목 추가</h2>
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label for="subjectName">과목명</label>
+                    <input type="text" id="subjectName" placeholder="예: 수학" required>
+                </div>
+                <button type="submit" class="btn-submit">추가</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 모달: 과목 선택 -->
+    <div id="changeSubjectModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>과목 선택</h2>
+            <div id="subjectOptions" class="subject-options">
+                <!-- 과목 선택 버튼들이 여기에 추가됨 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+</html>

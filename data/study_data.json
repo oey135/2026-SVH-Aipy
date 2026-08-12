@@ -1,0 +1,46 @@
+{
+  "today": "2026-08-12",
+  "ddays": [
+    {
+      "id": 1,
+      "name": "중간",
+      "date": "2026-10-06"
+    }
+  ],
+  "daily_plan": {
+    "date": "2026-08-12",
+    "motivation": "오늘은 진짜 공부한다",
+    "total_study_time": 0,
+    "subjects": [
+      {
+        "name": "영어",
+        "tasks": [
+          {
+            "title": "단어 외우기",
+            "completed": false,
+            "id": 1,
+            "subject_id": 1,
+            "task_id": 1
+          },
+          {
+            "title": "본문 해석하기",
+            "completed": false,
+            "id": 2
+          }
+        ],
+        "color": "subject-1",
+        "id": 1
+      }
+    ]
+  },
+  "study_records": {
+    "date": "2026-08-12",
+    "records": [
+      {
+        "time": "10:00",
+        "subject_id": 1,
+        "id": 1
+      }
+    ]
+  }
+}
