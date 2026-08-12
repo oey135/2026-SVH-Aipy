@@ -10,6 +10,24 @@ from urllib.parse import urlparse, parse_qs
 DATA_DIR = Path(__file__).parent.parent / "data"
 DATA_FILE = DATA_DIR / "study_data.json"
 
+def build_default_data():
+    """저장된 데이터가 없을 때 사용할 빈 기본값"""
+    today = datetime.now().strftime("%Y-%m-%d")
+    return {
+        "today": today,
+        "ddays": [],
+        "daily_plan": {
+            "date": today,
+            "motivation": "",
+            "total_study_time": 0,
+            "subjects": []
+        },
+        "study_records": {
+            "date": today,
+            "records": []
+        }
+    }
+
 # 데이터 초기화
 def init_data():
     """데이터 파일 초기화"""
@@ -17,21 +35,7 @@ def init_data():
         DATA_DIR.mkdir(parents=True, exist_ok=True)
     
     if not DATA_FILE.exists():
-        default_data = {
-            "today": datetime.now().strftime("%Y-%m-%d"),
-            "ddays": [],
-            "daily_plan": {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "motivation": "",
-                "total_study_time": 0,
-                "subjects": []
-            },
-            "study_records": {
-                "date": datetime.now().strftime("%Y-%m-%d"),
-                "records": []
-            }
-        }
-        save_data(default_data)
+        save_data(build_default_data())
 
 def load_data():
     """데이터 로드"""
@@ -40,8 +44,8 @@ def load_data():
             with open(DATA_FILE, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except:
-            return get_default_data()
-    return get_default_data()
+            return build_default_data()
+    return build_default_data()
 
 def save_data(data):
     """데이터 저장"""
@@ -51,20 +55,7 @@ def save_data(data):
 
 def get_default_data():
     """기본 데이터 반환"""
-    return {
-        "today": datetime.now().strftime("%Y-%m-%d"),
-        "ddays": [],
-        "daily_plan": {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "motivation": "",
-            "total_study_time": 0,
-            "subjects": []
-        },
-        "study_records": {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "records": []
-        }
-    }
+    return build_default_data()
 
 class StudyPlannerHandler(SimpleHTTPRequestHandler):
     """스터디 플래너 HTTP 핸들러"""
