@@ -499,7 +499,16 @@ body {
 }
 
 .time-cell.dragging {
-    opacity: 0.8;
+    background: var(--primary-color) !important;
+    color: white;
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+    z-index: 20;
+    transition: all 0.1s ease;
+}
+
+.time-cell.dragging .subject-name {
+    color: white;
 }
 
 .time-cell.selectable:hover {

@@ -62,6 +62,9 @@ function setupEventListeners() {
     document.getElementById('addSubjectBtn').addEventListener('click', openSubjectModal);
     document.getElementById('subjectForm').addEventListener('submit', handleSubjectSubmit);
     
+    // 드래그 종료 - document 레벨에서 처리
+    document.addEventListener('mouseup', endDrag);
+    
     // 종료 시 자동 저장
     window.addEventListener('beforeunload', () => saveData());
 }
@@ -401,15 +404,24 @@ function createTimeCell(timeStr, hourIndex, cellIndex) {
     cell.dataset.cell = cellIndex;
     
     // 마우스 이벤트
-    cell.addEventListener('mousedown', (e) => startDrag(e, cell, timeStr));
-    cell.addEventListener('mouseover', (e) => continueDrag(e, cell));
-    cell.addEventListener('mouseup', endDrag);
+    cell.addEventListener('mousedown', (e) => {
+        if (appData.daily_plan.subjects.length === 0) return;
+        isDragging = true;
+        dragStart = { hour: parseInt(hourIndex), cell: parseInt(cellIndex), time: timeStr };
+        dragEnd = { ...dragStart };
+        draggedCells = [];
+        updateDragPreview();
+    });
+    
+    cell.addEventListener('mouseenter', () => {
+        if (!isDragging) return;
+        dragEnd = { hour: parseInt(cell.dataset.hour), cell: parseInt(cell.dataset.cell), time: cell.dataset.time };
+        updateDragPreview();
+    });
+    
     cell.addEventListener('click', (e) => {
-        if (!isDragging && e.detail === 1) {
-            // 단순 클릭 (드래그 아님)
-            setTimeout(() => {
-                handleCellClick(timeStr);
-            }, 50);
+        if (!isDragging) {
+            handleCellClick(timeStr);
         }
     });
     
@@ -420,18 +432,17 @@ function startDrag(e, cell, timeStr) {
     if (appData.daily_plan.subjects.length === 0) return;
     
     isDragging = true;
-    dragStart = { hour: cell.dataset.hour, cell: cell.dataset.cell, time: timeStr };
-    dragEnd = dragStart;
-    draggedCells = [cell];
+    dragStart = { hour: parseInt(cell.dataset.hour), cell: parseInt(cell.dataset.cell), time: timeStr };
+    dragEnd = { ...dragStart };
+    draggedCells = [];
     
-    cell.classList.add('dragging');
     updateDragPreview();
 }
 
 function continueDrag(e, cell) {
     if (!isDragging) return;
     
-    dragEnd = { hour: cell.dataset.hour, cell: cell.dataset.cell, time: cell.dataset.time };
+    dragEnd = { hour: parseInt(cell.dataset.hour), cell: parseInt(cell.dataset.cell), time: cell.dataset.time };
     
     // 선택된 셀들 업데이트
     updateDragPreview();
@@ -456,48 +467,25 @@ function updateDragPreview() {
     draggedCells.forEach(c => c.classList.remove('dragging'));
     draggedCells = [];
     
-    // 새로운 범위 계산
-    const startHour = Math.min(parseInt(dragStart.hour), parseInt(dragEnd.hour));
-    const endHour = Math.max(parseInt(dragStart.hour), parseInt(dragEnd.hour));
-    const startCell = parseInt(dragStart.cell);
-    const endCell = parseInt(dragEnd.cell);
+    // dragStart와 dragEnd를 통합 인덱스로 변환 (시간 * 6 + 셀)
+    const startIdx = parseInt(dragStart.hour) * CELLS_PER_HOUR + parseInt(dragStart.cell);
+    const endIdx = parseInt(dragEnd.hour) * CELLS_PER_HOUR + parseInt(dragEnd.cell);
     
-    // 같은 시간대인 경우
-    if (startHour === endHour) {
-        const minCell = Math.min(startCell, endCell);
-        const maxCell = Math.max(startCell, endCell);
+    const minIdx = Math.min(startIdx, endIdx);
+    const maxIdx = Math.max(startIdx, endIdx);
+    
+    // 모든 셀을 순회하며 범위에 속한 셀 선택
+    const cells = document.querySelectorAll('.time-cell');
+    cells.forEach(cell => {
+        const hour = parseInt(cell.dataset.hour);
+        const cellIndex = parseInt(cell.dataset.cell);
+        const cellIdx = hour * CELLS_PER_HOUR + cellIndex;
         
-        const cells = document.querySelectorAll(`.time-cell[data-hour="${startHour}"]`);
-        for (let i = minCell; i <= maxCell; i++) {
-            if (cells[i]) {
-                cells[i].classList.add('dragging');
-                draggedCells.push(cells[i]);
-            }
+        if (cellIdx >= minIdx && cellIdx <= maxIdx) {
+            cell.classList.add('dragging');
+            draggedCells.push(cell);
         }
-    } else {
-        // 여러 시간대에 걸친 경우
-        const cells = document.querySelectorAll('.time-cell');
-        
-        cells.forEach(cell => {
-            const hour = parseInt(cell.dataset.hour);
-            const cellIndex = parseInt(cell.dataset.cell);
-            
-            let selected = false;
-            
-            if (hour === startHour) {
-                selected = cellIndex >= startCell;
-            } else if (hour === endHour) {
-                selected = cellIndex <= endCell;
-            } else if (hour > startHour && hour < endHour) {
-                selected = true;
-            }
-            
-            if (selected) {
-                cell.classList.add('dragging');
-                draggedCells.push(cell);
-            }
-        });
-    }
+    });
 }
 
 function handleCellClick(timeStr) {
