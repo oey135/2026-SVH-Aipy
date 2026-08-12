@@ -24,8 +24,10 @@
           },
           {
             "title": "본문 해석하기",
-            "completed": false,
-            "id": 2
+            "completed": true,
+            "id": 2,
+            "subject_id": 1,
+            "task_id": 2
           }
         ],
         "color": "subject-1",
@@ -48,24 +50,17 @@
         "tasks": [],
         "color": "subject-4",
         "id": 4
+      },
+      {
+        "name": "영어",
+        "tasks": [],
+        "color": "subject-5",
+        "id": 5
       }
     ]
   },
   "study_records": {
     "date": "2026-08-12",
-    "records": [
-      {
-        "id": 1,
-        "startTime": "10:00",
-        "duration": 10,
-        "subject_id": 1
-      },
-      {
-        "id": 2,
-        "startTime": "11:00",
-        "duration": 50,
-        "subject_id": 1
-      }
-    ]
+    "records": []
   }
 }

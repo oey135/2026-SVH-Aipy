@@ -696,6 +696,25 @@ body {
     text-align: left;
 }
 
+.delete-study-record-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: var(--danger-light);
+    color: var(--danger-color);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-study-record-btn:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
     .main-content {

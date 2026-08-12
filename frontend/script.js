@@ -516,6 +516,7 @@ function addMinutesToTime(timeStr, minutes) {
 
 function showChangeSubjectModal(cells, currentSubjectId = null) {
     const container = document.getElementById('subjectOptions');
+    const deleteBtn = document.getElementById('deleteStudyRecordBtn');
     container.innerHTML = '';
     
     appData.daily_plan.subjects.forEach((subject, index) => {
@@ -538,6 +539,17 @@ function showChangeSubjectModal(cells, currentSubjectId = null) {
         
         container.appendChild(btn);
     });
+
+    if (selectedRecordId) {
+        deleteBtn.classList.remove('hidden');
+        deleteBtn.onclick = async () => {
+            await deleteStudyRecord();
+            closeChangeSubjectModal();
+        };
+    } else {
+        deleteBtn.classList.add('hidden');
+        deleteBtn.onclick = null;
+    }
     
     document.getElementById('changeSubjectModal').classList.add('show');
 }
@@ -545,6 +557,19 @@ function showChangeSubjectModal(cells, currentSubjectId = null) {
 function closeChangeSubjectModal() {
     document.getElementById('changeSubjectModal').classList.remove('show');
     selectedRecordId = null;
+    const deleteBtn = document.getElementById('deleteStudyRecordBtn');
+    deleteBtn.classList.add('hidden');
+    deleteBtn.onclick = null;
+}
+
+async function deleteStudyRecord() {
+    if (!selectedRecordId) return;
+
+    if (confirm('이 공부 기록을 삭제할까요?')) {
+        await apiCall('/api/study-record/delete', { id: selectedRecordId });
+        await loadData();
+        updateUI();
+    }
 }
 
 async function applySubjectToRecord(cells, subjectId, colorClass) {
