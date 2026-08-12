@@ -37,8 +37,8 @@ let selectedRecordId = null;
 // 초기화
 // ============================================
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadData();
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadData();
     initializeUI();
     setupEventListeners();
     updateUI();
